@@ -782,18 +782,18 @@ class Downloader:
     ) -> Path:
         match mode:
             case "post":
-                folder_name = _("UID{id_}_{name}_发布作品").format(id_=id_, name=name)
-            case "favorite":
-                folder_name = _("UID{id_}_{name}_喜欢作品").format(id_=id_, name=name)
-            case "mix":
-                folder_name = _("MID{id_}_{name}_合集作品").format(id_=id_, name=name)
-            case "collection":
-                folder_name = _("UID{id_}_{name}_收藏作品").format(id_=id_, name=name)
-            case "collects":
-                folder_name = _("CID{id_}_{name}_收藏夹作品").format(id_=id_, name=name)
-            case "detail":
-                folder_name = self.folder_name
-            case _:
+            folder_name = _("{name}_发布作品").format(name=name)
+        case "favorite":
+            folder_name = _("{name}_喜欢作品").format(name=name)
+        case "mix":
+            folder_name = _("{name}_合集作品").format(name=name)
+        case "collection":
+            folder_name = _("{name}_收藏作品").format(name=name)
+        case "collects":
+            folder_name = _("{name}_收藏夹作品").format(name=name)
+        case "detail":
+            folder_name = self.folder_name
+        case _:
                 raise DownloaderError
         folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
