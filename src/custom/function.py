@@ -1,4 +1,3 @@
-print("Kea Build Test")
 from asyncio import sleep
 from math import log
 from random import lognormvariate
