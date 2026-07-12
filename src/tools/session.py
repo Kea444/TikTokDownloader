@@ -1,6 +1,13 @@
 from typing import TYPE_CHECKING, Union
 
-from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
+from httpx import (
+    AsyncClient,
+    AsyncHTTPTransport,
+    Client,
+    HTTPTransport,
+    Limits,
+)
+##from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 
 from ..custom import TIMEOUT, USERAGENT
 from ..tools import DownloaderError
@@ -30,6 +37,13 @@ def create_client(
         timeout=timeout,
         follow_redirects=True,
         verify=False,
+        #！新添
+        http2=True,
+        limits=Limits(
+    max_connections=100,
+    max_keepalive_connections=50,
+),
+        #！新添
         mounts={
             "http://": AsyncHTTPTransport(proxy=proxy),
             "https://": AsyncHTTPTransport(proxy=proxy),
