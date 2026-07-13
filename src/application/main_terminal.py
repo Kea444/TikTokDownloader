@@ -540,6 +540,7 @@ class TikTok:
         index: int,
         sec_user_id: str,
         mark="",
+        url="",
         tab="post",
         earliest="",
         latest="",
