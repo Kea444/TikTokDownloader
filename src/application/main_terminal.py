@@ -591,6 +591,8 @@ class TikTok:
             earliest=earliest,
             latest=latest,
             pages=pages,
+            mark=mark,
+            url=url,
             **kwargs,
         )
         if not any(account_data):
