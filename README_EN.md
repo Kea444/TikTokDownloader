@@ -18,7 +18,7 @@
 <br>
 <p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream push addresses; download DouYin live stream video; obtain TikTok live stream push addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
 <p>⭐ Previous project names: <code>TikTokDownloader</code></p>
-<p>📣 This project will undergo code structure refactoring in the future, with the goal of making the code more robust and providing better maintainability and extensibility. If you have any thoughts on project design, implementation methods, or optimization ideas, you are welcome to make suggestions or participate in discussions!</p>
+<p>⚠️ The encryption parameter algorithm for this project has expired and is no longer valid; to ensure legal and regulatory compliance, the parameter algorithm is no longer maintained, and some features may not work properly. If you need to use it, please prepare the encryption parameter generation code yourself. For configuration instructions, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">documentation</a>!</p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
 <hr>
 
@@ -156,6 +156,10 @@ demo()
 </li>
 <li>Read the disclaimer of DouK-Downloader and enter content according to the prompt.</li>
 <li>Write Cookie Information into Configuration File 
+<ol><b>Manually Enter Cookie</b>
+<li>Refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard</li>
+<li>Select the <code>Manually Enter Cookie</code> option, paste the Cookie content and follow the program prompts</li>
+</ol>
 <ol><b>Read Cookie from Clipboard</b>
 <li>Refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard</li>
 <li>Select the <code>Extracting cookie from clipboard</code> option, the program will automatically read the Cookie from the clipboard and write it into the configuration file</li>
@@ -220,11 +224,11 @@ demo()
 <li>When batch downloading account posts works or mix works, if the corresponding nickname or mark parameter changes, the program will automatically update the nickname and mark parameter in the file names of the downloaded works.</li>
 <li>When downloading files, the program first downloads them to a temporary folder and then moves them to the storage folder upon completion. The temporary folder will be emptied when the program ends.</li>
 <li>The <code>Batch Download Favorites Works Mode</code> currently only supports downloading Favorites works for the account corresponding to the currently logged-in Cookie and does not support multiple accounts.</li>
-<li>If you want the program to use a proxy to request data, set the <code>proxy</code> parameter in the configuration file <code>settings.json</code> (may consider using proxy services like: <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> or <a href="https://bestproxy.com/?keyword=btuzoy3b">BestProxy</a>)</li>
+<li>If you want the program to use a proxy to request data, set the <code>proxy</code> parameter in the configuration file <code>settings.json</code> (may consider using proxy services like: <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a>)</li>
 <li>If your computer does not have a suitable program for editing JSON files, we recommend using the <a href="https://www.toolhelper.cn/JSON/JSONFormat">Online Tool</a> to edit the configuration file content, after modification, the software needs to be restarted to take effect.</li>
 <li>When the program prompts the user to input content or links, please be careful to avoid including newline characters, as this may cause unexpected issues.</li>
 <li>This project does not support downloading paid works. Please do not report any issues related to downloading paid works.</li>
-<li>On Windows systems, the program needs to be run as an administrator to read Cookies from Chromium, Chrome, and Edge browsers.</li>
+<li><del>On Windows systems, the program needs to be run as an administrator to read Cookies from Chromium, Chrome, and Edge browsers.</del></li>
 <li>This project has not been optimized for running multiple instances of the program. If you need to run multiple instances, please copy the entire project folder to avoid unexpected issues.</li>
 <li>During program execution, if you need to terminate the program or <code>ffmpeg</code>, please press <code>Ctrl + C</code> to stop the process. Do not click the close button on the terminal window directly.</li>
 </ul>
@@ -327,6 +331,21 @@ repository to execute the build process
 
 # 💝 Project Sponsorship
 
+## Swiftproxy
+
+<p><a href="https://www.swiftproxy.net/?ref=TikTokDownloader"><img src="docs/AD/Swiftproxy_EN_AD.png" alt="Swiftproxy"></a></p>
+<p>Access a global pool of 80M+ residential IPs optimized for TikTok and Douyin data extraction. <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> helps bypass rate limits, reduce blocks, and ensures stable downloads with seamless IP rotation.</p>
+<p>10% off code: PROXY90</p>
+
+***
+
+## Thordata
+
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_EN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>: offers 100M+ rotating residential IPs across 190+ countries, Unlimited proxies are ideal for high-concurrency, high-traffic tasks, from $38/day, rotating or sticky sessions, precise targeting and more stable connections. Use code <b>Thor20d</b> for a 10% discount.</p>
+
+***
+
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
@@ -337,38 +356,6 @@ repository to execute the build process
 
 <p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
 <p><a href="https://www.zmto.com/">ZMTO</a>: A professional cloud infrastructure provider offering sophisticated solutions with reliable technology and expert support. We also empower qualified open source initiatives with enterprise-grade VPS infrastructure, driving sustainable development and innovation in the open source ecosystem. </p>
-
-***
-
-## Swiftproxy
-
-<p><a href="https://www.swiftproxy.net/?ref=TikTokDownloader"><img src="docs/AD/Swiftproxy_EN_AD.png" alt="Swiftproxy"></a></p>
-<p>Access a global pool of 80M+ residential IPs optimized for TikTok and Douyin data extraction. <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> helps bypass rate limits, reduce blocks, and ensures stable downloads with seamless IP rotation.</p>
-<p>10% off code: PROXY90</p>
-
-***
-
-## BestProxy
-
-<p><a href="https://bestproxy.com/?keyword=btuzoy3b"><img src="docs/AD/BestProxy_EN_AD.gif" alt="BestProxy"></a></p>
-<p><a href="https://bestproxy.com/?keyword=btuzoy3b">BestProxy</a> provides residential proxies and dynamic IP solutions that work particularly well for high-risk platforms like TikTok.</p>
-<ul>
-<li>✅ More stable high-volume downloading</li>
-<li>✅ Lower request failure rates</li>
-<li>✅ Better access to region-specific content</li>
-<li>✅ Improved long-session stability</li>
-<li>✅ More suitable for scraping and automation workflows</li>
-<li>✅ Supports HTTP / HTTPS / SOCKS5</li>
-</ul>
-<p>Get 10% off + 500MB free data | Use code: ZCTYUH90</p>
-
-***
-
-## RapidProxy
-
-<p><a href="https://www.rapidproxy.io/?ref=Jo"><img src="docs/AD/RapidProxy_EN_AD.png" alt="RapidProxy" width="600" height="314"></a></p>
-<p><a href="https://www.rapidproxy.io/?ref=Jo">RapidProxy</a> provides 90M+ high-quality residential IPs worldwide, built for TikTok and short-video platform data collection, content downloading, and automation workflows. With high-anonymity access, flexible IP rotation, and stable long-session connections, <a href="https://www.rapidproxy.io/?ref=Jo">RapidProxy</a> helps improve task success rates while reducing platform detection and risk controls.</p>
-<p>Coupon Code: RAPID10 → Get 10% OFF</p>
 
 ***
 
@@ -464,4 +451,5 @@ repository to execute the build process
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
+* https://github.com/neverl805/never-jscore
 * https://ffmpeg.org/ffmpeg-all.html

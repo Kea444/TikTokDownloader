@@ -18,7 +18,7 @@
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播拉流地址；下载抖音直播视频；获取 TikTok 直播拉流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ 本项目历史名称：<code>TikTokDownloader</code></p>
-<p>📣 本项目将于未来进行代码结构重构，目标是让代码更加稳健，并具备更好的可维护性与扩展性；如果你对项目设计、实现方式或优化思路有想法，欢迎提出建议或参与讨论！</p>
+<p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">文档</a>！</p>
 <hr>
 
 # 📝 项目功能
@@ -153,6 +153,10 @@ demo()
 </li>
 <li>阅读 DouK-Downloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
+<ol><b>手动输入 Cookie</b>
+<li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
+<li>选择 <code>手动输入 Cookie</code> 选项，粘贴 Cookie 内容后按照程序提示操作</li>
+</ol>
 <ol><b>从剪贴板读取 Cookie</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>从剪贴板读取 Cookie</code> 选项，程序会自动读取剪贴板的 Cookie 并写入配置文件</li>
@@ -216,11 +220,11 @@ demo()
 <li>批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识</li>
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
-<li>如果需要程序使用代理请求数据，请在配置文件 <code>settings.json</code> 设置 <code>proxy</code> 参数 (可以考虑使用代理平台: <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> 或 <a href="https://bestproxy.com/?keyword=btuzoy3b">BestProxy</a>)</li>
+<li>如果需要程序使用代理请求数据，请在配置文件 <code>settings.json</code> 设置 <code>proxy</code> 参数 (可以考虑使用代理平台: <a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a>)</li>
 <li>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://www.toolhelper.cn/JSON/JSONFormat">在线工具</a> 编辑配置文件内容，修改后需要重启软件才能生效。</li>
 <li>当程序请求用户输入内容或链接时，请注意避免输入的内容或链接包含换行符，这可能会导致预期之外的问题</li>
 <li>本项目不会支持付费作品下载，请勿反馈任何关于付费作品下载的问题</li>
-<li>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie</li>
+<li><del>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie</del></li>
 <li>本项目并未针对程序多开的情况进行优化，如需程序多开，请复制整个项目的文件夹，避免出现预期之外的问题</li>
 <li>程序运行过程中，如需终止程序或 <code>ffmpeg</code>，请按下 <code>Ctrl + C</code> 终止运行，不要直接点击终端窗口的关闭按钮</li>
 </ul>
@@ -317,6 +321,21 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 # 💝 项目赞助
 
+## Swiftproxy
+
+<p><a href="https://www.swiftproxy.net/?ref=TikTokDownloader"><img src="docs/AD/Swiftproxy_CN_AD.png" alt="Swiftproxy"></a></p>
+<p>接入覆盖全球的 8000万+ 住宅 IP，专为 TikTok / 抖音数据采集与下载优化，<a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> 可有效降低限流与封禁风险，保障下载稳定性与自动轮换。</p>
+<p>优惠码：PROXY90（9折）</p>
+
+***
+
+## Thordata
+
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_CN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>：提供 190+ 国家 100M+ 动态住宅 IP，无限量代理适合高并发、高流量任务，低至 $38/天，旋转或粘性会话，精准定位更稳连接；凭折扣码 <b>Thor20d</b> 可获 10% 折扣。</p>
+
+***
+
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
@@ -327,38 +346,6 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 <p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
 <p><a href="https://www.zmto.com/">ZMTO</a>：一家专业的云基础设施提供商，以可靠的尖端技术与专业支持，提供高效的解决方案，并为符合条件的开源项目提供企业级VPS基础设施，支持开源生态系统的可持续发展与创新。</p>
-
-***
-
-## Swiftproxy
-
-<p><a href="https://www.swiftproxy.net/?ref=TikTokDownloader"><img src="docs/AD/Swiftproxy_CN_AD.png" alt="Swiftproxy"></a></p>
-<p>接入覆盖全球的 8000万+ 住宅 IP，专为 TikTok / 抖音数据采集与下载优化，<a href="https://www.swiftproxy.net/?ref=TikTokDownloader">Swiftproxy</a> 可有效降低限流与封禁风险，保障下载稳定性与自动轮换。</p>
-<p>优惠码：PROXY90（9折）</p>
-
-***
-
-## BestProxy
-
-<p><a href="https://bestproxy.com/?keyword=btuzoy3b"><img src="docs/AD/BestProxy_CN_AD.gif" alt="BestProxy"></a></p>
-<p><a href="https://bestproxy.com/?keyword=btuzoy3b">BestProxy</a> 提供住宅代理与动态 IP，比较适合 TikTok 这种高风控平台的长期自动化场景。</p>
-<ul>
-<li>✅ 高频下载更加稳定</li>
-<li>✅ 请求失败率明显降低</li>
-<li>✅ 多地区内容访问更顺畅</li>
-<li>✅ 更适合长期挂机运行</li>
-<li>✅ 对批量采集和自动化更加友好</li>
-<li>✅ 支持 HTTP / HTTPS / SOCKS5</li>
-</ul>
-<p>折扣：10%，赠送 500M 流量，券码：ZCTYUH90</p>
-
-***
-
-## RapidProxy
-
-<p><a href="https://www.rapidproxy.io/?ref=Jo"><img src="docs/AD/RapidProxy_CN_AD.png" alt="RapidProxy" width="600" height="314"></a></p>
-<p><a href="https://www.rapidproxy.io/?ref=Jo">RapidProxy</a> 提供全球 9000万+ 高质量住宅 IP，专为 TikTok 与短视频平台的数据采集、内容下载及自动化运营场景打造。支持高匿名访问、灵活切换 IP 与长时间稳定连接，帮助提升任务成功率并降低平台风控干扰。</p>
-<p>优惠码：RAPID10（享 9 折优惠）</p>
 
 ***
 
@@ -460,4 +447,5 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
+* https://github.com/neverl805/never-jscore
 * https://ffmpeg.org/ffmpeg-all.html
