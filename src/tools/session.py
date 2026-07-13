@@ -38,7 +38,6 @@ def create_client(
         follow_redirects=True,
         verify=False,
         #！新添
-        http2=True,
         limits=Limits(
     max_connections=100,
     max_keepalive_connections=50,
