@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Union
 
-from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport,Limits
+from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 ##from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 
 from ..custom import TIMEOUT, USERAGENT
@@ -32,10 +32,10 @@ def create_client(
         follow_redirects=True,
         verify=False,
         #！新添
-      limits=Limits(
-      max_connections=100,
-      max_keepalive_connections=50,
-      ),
+#      limits=Limits(
+#      max_connections=100,
+#      max_keepalive_connections=50,
+#      ),
         #！新添
         mounts={
             "http://": AsyncHTTPTransport(proxy=proxy),
