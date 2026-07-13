@@ -22,7 +22,7 @@ async def wait() -> None:
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
     """
     # 随机延时
-     await sleep(get_wait_time())
+    await sleep(get_wait_time())
     # 取消延时
     #pass
 
