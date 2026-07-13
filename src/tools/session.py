@@ -38,10 +38,10 @@ def create_client(
         follow_redirects=True,
         verify=False,
         #！新添
-        limits=Limits(
-    max_connections=100,
-    max_keepalive_connections=50,
-),
+       #！新添 limits=Limits(
+    #！新添 max_connections=100,
+  #！新添  max_keepalive_connections=50,
+#！新添 ),
         #！新添
         mounts={
             "http://": AsyncHTTPTransport(proxy=proxy),
