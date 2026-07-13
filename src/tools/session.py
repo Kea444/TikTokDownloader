@@ -31,12 +31,6 @@ def create_client(
         timeout=timeout,
         follow_redirects=True,
         verify=False,
-        #！新添
-#      limits=Limits(
-#      max_connections=100,
-#      max_keepalive_connections=50,
-#      ),
-        #！新添
         mounts={
             "http://": AsyncHTTPTransport(proxy=proxy),
             "https://": AsyncHTTPTransport(proxy=proxy),

@@ -24,7 +24,7 @@ async def wait() -> None:
     # 随机延时
      await sleep(get_wait_time())
     # 取消延时
-     #pass
+    #pass
 
 
 def failure_handling() -> bool:
