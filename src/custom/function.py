@@ -22,9 +22,9 @@ async def wait() -> None:
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
     """
     # 随机延时
-    await sleep(get_wait_time())
+    #await sleep(get_wait_time())
     # 取消延时
-    #pass
+    pass
 
 
 def failure_handling() -> bool:
@@ -56,9 +56,9 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
     """
     # 启用该函数
-    batches = 21  # 根据实际需求修改
+    batches = 21  # 下载第多少账号
     if not count % batches:
-        rest_time = 40 # 根据实际需求修改 已修改为20个暂停2分钟
+        rest_time = 40 # 暂停时间单位秒
         console.print(
             _(
                 "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
