@@ -98,6 +98,8 @@ class TikTokDownloader:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self.recorder:
+            await self.recorder.close()
         await self.database.__aexit__(exc_type, exc_val, exc_tb)
         if self.parameter:
             await self.parameter.close_client()
@@ -323,6 +325,7 @@ class TikTokDownloader:
         await self.database.update_config_data(key, self.config[key])
         self.console.print(_("修改设置成功！"))
         self.check_config()
+        await self.recorder.initialize()
         await self.check_settings()
 
     async def write_cookie_paste(self):
@@ -430,6 +433,7 @@ class TikTokDownloader:
     async def run(self):
         self.project_info()
         self.check_config()
+        await self.recorder.initialize()
         await self.check_settings(
             False,
         )

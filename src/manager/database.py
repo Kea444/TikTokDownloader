@@ -109,6 +109,21 @@ class Database:
         )
         await self.database.commit()
 
+    async def batch_write_download_data(self, ids: set):
+        """批量写入已下载 ID，单次 commit，高效减少锁竞争"""
+        if not ids:
+            return
+        await self.database.executemany(
+            "INSERT OR IGNORE INTO download_data (ID) VALUES (?);",
+            [(i,) for i in ids],
+        )
+        await self.database.commit()
+
+    async def load_all_download_ids(self) -> set:
+        """一次性加载全部已下载 ID 到内存 set，用于构建缓存"""
+        await self.cursor.execute("SELECT ID FROM download_data")
+        return {row[0] for row in await self.cursor.fetchall()}
+
     async def delete_download_data(self, ids: list | tuple | str):
         if not ids:
             return
