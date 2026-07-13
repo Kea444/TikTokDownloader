@@ -16,9 +16,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    try:
-        run(main())
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        input("Press Enter to exit...")
+    run(main())
