@@ -25,11 +25,15 @@ class Account(API):
         pages: int = None,
         cursor=0,
         count=18,
+        mark: str = "",
+        url: str = "",
         *args,
         **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.sec_user_id = sec_user_id
+        self.mark = mark
+        self.url = url
         self.api, self.favorite, self.pages = self.check_type(
             tab, pages or params.max_pages
         )
@@ -251,7 +255,8 @@ class Account(API):
     ):
         try:
             if not (d := data_dict[data_key]):
-                self.log.warning(f"{error_text}（sec_user_id: {self.sec_user_id}）")
+                info = f"{self.mark} - {self.url}" if self.mark else f"sec_user_id: {self.sec_user_id}"
+                self.log.warning(f"{error_text}（{info}）")
                 self.finished = True
             else:
                 self.cursor = data_dict[cursor]
