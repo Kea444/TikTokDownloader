@@ -657,13 +657,13 @@ class Downloader:
                         case _:
                             raise DownloaderError
             except RequestError as e:
-                self.log.warning(_("网络异常: {error_repr}").format(error_repr=repr(e)))
+                self.log.error(_("网络异常: {error_repr}").format(error_repr=repr(e)))
                 return False
             except HTTPStatusError as e:
-                self.log.warning(
+                self.log.error(
                     _("响应码异常: {error_repr}").format(error_repr=repr(e))
                 )
-                self.console.warning(
+                self.console.error(
                     _(
                         "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！"
                     ),
@@ -711,7 +711,7 @@ class Downloader:
             StreamError,
         ) as e:
             progress.remove_task(task_id)
-            self.log.warning(
+            self.log.error(
                 _("{show} 下载中断，错误信息：{error}").format(show=show, error=e)
             )
             # self.delete_file(cache)

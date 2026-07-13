@@ -251,7 +251,7 @@ class Account(API):
     ):
         try:
             if not (d := data_dict[data_key]):
-                self.log.warning(error_text)
+                self.log.warning(f"{error_text}（sec_user_id: {self.sec_user_id}）")
                 self.finished = True
             else:
                 self.cursor = data_dict[cursor]
