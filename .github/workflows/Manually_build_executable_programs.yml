@@ -37,7 +37,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all rich --collect-all src main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all rich  --paths . --hidden-import src.custom.function --hidden-import src.custom main.py
 
       - name: 上传文件
         uses: actions/upload-artifact@v4
