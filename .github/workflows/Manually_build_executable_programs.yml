@@ -25,12 +25,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
+          pip install h2
 
       - name: 构建 Win 可执行文件
         if: runner.os == 'Windows'
         run: |
           echo "DATE=$(Get-Date -Format 'yyyyMMdd')" >> $env:GITHUB_ENV
-          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all rich main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all rich --collect-all httpx --collect-all h2 main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
