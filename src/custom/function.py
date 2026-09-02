@@ -27,6 +27,13 @@ async def wait() -> None:
     # pass
 
 
+async def wait_retry() -> None:
+    """
+    设置请求重试间隔时间，随机等待 0~2 秒
+    """
+    await sleep(uniform(0, 2))
+
+
 def failure_handling() -> bool:
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
