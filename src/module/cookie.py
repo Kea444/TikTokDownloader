@@ -35,6 +35,7 @@ class Cookie:
         tiktok: bool = False,
     ) -> bool:
         """提取 Cookie 并写入配置文件"""
+
         if not cookie:
             cookie: str = paste()
 
