@@ -20,8 +20,6 @@
 from pathlib import Path
 from urllib.parse import quote, urlencode
 
-import never_jscore
-
 from src.custom import USERAGENT
 from src.encrypt import XBogus as _XBogus, XGnarly as _XGnarly
 
@@ -50,6 +48,12 @@ def _get_engine():
             "未找到 static/js/a_bogus.js，请确认该文件存在"
             "（源码运行时位于项目根目录，打包运行时位于 _internal 目录）！"
         )
+    try:
+        import never_jscore
+    except ImportError as exc:
+        raise RuntimeError(
+            "缺少依赖 never_jscore，请先执行 pip install never-jscore 后再运行！"
+        ) from exc
     _ENGINE = never_jscore.JSEngine(js_path.read_text(encoding="utf-8"))
     return _ENGINE
 
