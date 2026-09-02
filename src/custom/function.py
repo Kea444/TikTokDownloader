@@ -1,6 +1,6 @@
 from asyncio import sleep
 from math import log
-from random import lognormvariate#,uniform
+from random import lognormvariate,uniform
 from typing import TYPE_CHECKING
 
 from src.translation import _
