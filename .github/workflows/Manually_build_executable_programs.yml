@@ -8,6 +8,7 @@ jobs:
     name: 构建于 ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ windows-latest, windows-11-arm, macos-15-intel, macos-latest ]
 
