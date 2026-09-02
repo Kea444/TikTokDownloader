@@ -10,24 +10,48 @@
     XBogus.get_x_bogus(query, data, method, user_agent) -> str # TikTok X-Bogus
     XGnarly.generate(query, data, method, user_agent) -> str   # TikTok X-Gnarly
 
-当前实现为“临时占位实现”：直接复用项目内置算法，仅用于验证外部加载链路是否打通。
-若抖音 / TikTok 升级签名算法后内置算法失效（例如返回 403），请将下方 get_value /
-get_x_bogus / generate 替换为你自己的、与平台当前版本一致的实现（可调用
-httpx / never_jscore / JavaScript 或自建参数生成服务）。
+当前实现：
+    - ABogus：通过 `never_jscore` 执行 `static/js/a_bogus.js` 的 `generate_a_bogus()`
+      生成抖音 a_bogus。算法版本完全由该 JS 决定，若抖音升级算法，请同步替换
+      `static/js/a_bogus.js` 为与抖音当前版本一致的实现。
+    - XBogus / XGnarly：仍转发项目内置实现，如需可同样改为 JS/Node 或自建服务。
 """
 
+from pathlib import Path
+from urllib.parse import quote, urlencode
+
+import never_jscore
+
 from src.custom import USERAGENT
-from src.encrypt import (
-    ABogus as _ABogus,
-    XBogus as _XBogus,
-    XGnarly as _XGnarly,
-)
+from src.encrypt import XBogus as _XBogus, XGnarly as _XGnarly
 
 __all__ = [
     "ABogus",
     "XBogus",
     "XGnarly",
 ]
+
+_ROOT = Path(__file__).resolve().parent
+_JS_PATHS = (
+    _ROOT / "static" / "js" / "a_bogus.js",
+    _ROOT.parent / "static" / "js" / "a_bogus.js",
+)
+_ENGINE = None
+
+
+def _get_engine():
+    """懒加载并缓存 never_jscore 的 JS 引擎。"""
+    global _ENGINE
+    if _ENGINE is not None:
+        return _ENGINE
+    js_path = next((p for p in _JS_PATHS if p.is_file()), None)
+    if js_path is None:
+        raise FileNotFoundError(
+            "未找到 static/js/a_bogus.js，请确认该文件存在"
+            "（源码运行时位于项目根目录，打包运行时位于 _internal 目录）！"
+        )
+    _ENGINE = never_jscore.JSEngine(js_path.read_text(encoding="utf-8"))
+    return _ENGINE
 
 
 class ABogus:
@@ -43,7 +67,12 @@ class ABogus:
         method: str | None = None,
         user_agent: str = "",
     ) -> str:
-        return _ABogus(user_agent or USERAGENT).get_value(query, data, method)
+        if isinstance(query, dict):
+            query = urlencode(query, safe="=", quote_via=quote)
+        return _get_engine().call(
+            "generate_a_bogus",
+            [query or "", user_agent or USERAGENT],
+        )
 
 
 class XBogus:
@@ -86,3 +115,4 @@ class XGnarly:
             method,
             user_agent=user_agent or USERAGENT,
         )
+
