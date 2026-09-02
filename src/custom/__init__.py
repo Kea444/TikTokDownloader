@@ -1,5 +1,6 @@
 from .function import (
     wait,
+    wait_retry,
     failure_handling,
     condition_filter,
     suspend,
