@@ -120,7 +120,7 @@ class Parameter:
         self.cache = PROJECT_ROOT.joinpath("Cache")  # 缓存路径
         self.logger = logger(PROJECT_ROOT, console)
         self.logger.run()
-        self.ab, self.xb, self.xg = self.check_objects_from_external_py(console)
+        self.check_objects_from_external_py(console)
         self.console = console
         self.recorder = recorder
         self.preview = BLANK_PREVIEW
@@ -1054,12 +1054,13 @@ class Parameter:
                 i,
             ):
                 API.params[i] = v
-        self.ab = ABogus(
-            ua,
-            info.get(
-                "browser_platform",
-            ),
-        )
+        if not self.external_ab:
+            self.ab = ABogus(
+                ua,
+                info.get(
+                    "browser_platform",
+                ),
+            )
 
     def __set_browser_info_tiktok(
         self,
@@ -1196,10 +1197,12 @@ class Parameter:
         ).exists() and not self.cache.exists():
             move(old, self.cache)
 
-    @staticmethod
-    def check_objects_from_external_py(console: "ColorfulConsole"):
+    def check_objects_from_external_py(
+        self,
+        console: "ColorfulConsole",
+    ) -> None:
         objects = load_objects_from_external_py(
-            "encipher",
+            "encipher.py",
             [
                 "ABogus",
                 "XBogus",
@@ -1207,7 +1210,17 @@ class Parameter:
             ],
             console,
         )
-        ab = objects.get("ABogus", ABogus)
-        xb = objects.get("XBogus", XBogus)
-        xg = objects.get("XGnarly", XGnarly)
-        return ab(), xb(), xg()
+        self.external_ab = "ABogus" in objects
+        self.ab = (objects.get("ABogus") or ABogus)()
+        self.xb = (objects.get("XBogus") or XBogus)()
+        self.xg = (objects.get("XGnarly") or XGnarly)()
+        if self.external_ab:
+            self.logger.info(
+                _("已从 encipher.py 加载 ABogus 加密参数！"),
+                False,
+            )
+        else:
+            self.logger.warning(
+                _("未从 encipher.py 加载到 ABogus，程序将使用内置算法（可能已过期）！"),
+                False,
+            )
