@@ -1,6 +1,10 @@
 # 同时下载作品文件的最大任务数，对直播无效
 MAX_WORKERS = 6
 
+# 抖音数据接口：每处理多少个账号刷新一次 ttwid（ttwid 是设备身份标识，
+# 更换 ttwid 可以重置一部分设备侧的风控计数）
+TTWID_REFRESH_INTERVAL = 10
+
 # 非法字符替换规则，key 为替换前的文本，value 为替换后的文本
 TEXT_REPLACEMENT = {
     " ": " ",

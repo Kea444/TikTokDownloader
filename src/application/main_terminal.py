@@ -583,6 +583,8 @@ class TikTok:
                     "如果账号发布作品均为共创作品且该账号均不是作品作者时，请配置已登录的 Cookie 后重新运行程序，其余情况请无视该提示！"
                 )
             )
+        if not tiktok:
+            await self.parameter.refresh_douyin_for_account()
         acquirer = self._get_account_data_tiktok if tiktok else self._get_account_data
         account_data, earliest, latest = await acquirer(
             cookie=cookie,

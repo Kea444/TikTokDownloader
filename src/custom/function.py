@@ -1,6 +1,6 @@
 from asyncio import sleep
 from math import log
-from random import lognormvariate
+from random import lognormvariate, uniform
 from typing import TYPE_CHECKING
 
 from src.translation import _
@@ -25,6 +25,13 @@ async def wait() -> None:
     #await sleep(get_wait_time())
     # 取消延时
     pass
+
+
+async def small_wait() -> None:
+    """
+    失败重试前的短暂间隔，避免短时间内连续发送大量请求触发风控
+    """
+    await sleep(uniform(0.3, 1.0))
 
 
 def failure_handling() -> bool:

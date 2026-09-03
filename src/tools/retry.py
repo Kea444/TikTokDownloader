@@ -1,4 +1,4 @@
-from ..custom import RETRY, wait
+from ..custom import RETRY, small_wait
 from ..translation import _
 
 __all__ = ["Retry"]
@@ -17,7 +17,7 @@ class Retry:
                 if result := await function(self, *args, **kwargs):
                     return result
                 self.log.warning(_("正在进行第 {index} 次重试").format(index=i + 1))
-                await wait()
+                await small_wait()
             if not (result := await function(self, *args, **kwargs)) and finished:
                 self.finished = True
             return result
@@ -32,7 +32,7 @@ class Retry:
             for _ in range(RETRY):
                 if r := await function(*args, **kwargs):
                     return r
-                await wait()
+                await small_wait()
             return r
 
         return inner

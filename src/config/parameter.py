@@ -17,6 +17,7 @@ from ..custom import (
     PROJECT_ROOT,
     QRCODE_HEADERS,
     TIMEOUT,
+    TTWID_REFRESH_INTERVAL,
     USERAGENT,
 )
 from ..encrypt import (
@@ -126,6 +127,7 @@ class Parameter:
         self.preview = BLANK_PREVIEW
         self.ms_token = ""
         self.ms_token_tiktok = ""
+        self._douyin_account_count = 0
 
         self.headers = DATA_HEADERS
         self.headers_tiktok = DATA_HEADERS_TIKTOK
@@ -573,21 +575,7 @@ class Parameter:
                 self.console.info(
                     _("正在更新抖音参数，请稍等..."),
                 )
-                ms_token = await self.__get_token_params()
-                tt_wid = await self.__get_tt_wid_params()
-                API.params["msToken"] = ms_token.get(MsToken.NAME, "")
-                await self.__update_cookie(
-                    (
-                        ms_token,
-                        tt_wid,
-                    ),
-                    (
-                        self.headers,
-                        self.headers_download,
-                    ),
-                    self.cookie_dict,
-                    self.cookie_str,
-                )
+                await self.refresh_douyin_session(True)
                 self.console.info(
                     _("抖音参数更新完毕！"),
                 )
@@ -631,6 +619,45 @@ class Parameter:
                     ),
                     False,
                 )
+
+    async def refresh_douyin_session(
+        self,
+        refresh_ttwid=False,
+    ) -> None:
+        """刷新抖音数据接口所需的 msToken（必刷）和 ttwid（可选）。
+
+        msToken 在真实浏览器中会随请求高频变化；ttwid 是设备身份标识，
+        定期更换 ttwid 可以重置一部分设备侧的风控计数。
+        """
+        ms_token = await self.__get_token_params()
+        tt_wid = await self.__get_tt_wid_params() if refresh_ttwid else {}
+        API.params["msToken"] = ms_token.get(MsToken.NAME, "")
+        await self.__update_cookie(
+            (
+                ms_token,
+                tt_wid,
+            ),
+            (
+                self.headers,
+                self.headers_download,
+            ),
+            self.cookie_dict,
+            self.cookie_str,
+        )
+
+    async def refresh_douyin_for_account(self) -> None:
+        """每个账号处理前调用：每次刷新 msToken，每 TTWID_REFRESH_INTERVAL 个账号刷新一次 ttwid。"""
+        if not self.douyin_platform or not any(
+            (
+                self.cookie_dict,
+                self.cookie_str,
+            )
+        ):
+            return
+        self._douyin_account_count += 1
+        await self.refresh_douyin_session(
+            self._douyin_account_count % TTWID_REFRESH_INTERVAL == 0
+        )
 
     async def update_params_offline(self) -> None:
         if self.douyin_platform:
@@ -1054,6 +1081,20 @@ class Parameter:
                 i,
             ):
                 API.params[i] = v
+        self.headers.setdefault("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+        self.headers.setdefault("Origin", "https://www.douyin.com")
+        self.headers.setdefault("Sec-Fetch-Dest", "empty")
+        self.headers.setdefault("Sec-Fetch-Mode", "cors")
+        self.headers.setdefault("Sec-Fetch-Site", "same-origin")
+        self.headers["Accept"] = "application/json, text/plain, */*"
+        self.headers["Accept-Encoding"] = "gzip, deflate"
+        version = (info.get("browser_version") or "139").split(".")[0]
+        self.headers["sec-ch-ua"] = (
+            f'"Chromium";v="{version}", "Not.A/Brand";v="24", '
+            f'"Google Chrome";v="{version}"'
+        )
+        self.headers["sec-ch-ua-mobile"] = "?0"
+        self.headers["sec-ch-ua-platform"] = '"Windows"'
         if not self.external_ab:
             self.ab = ABogus(
                 ua,
