@@ -58,7 +58,7 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     # 启用该函数
     batches = 21  # 下载第多少账号
     if not count % batches:
-        rest_time = 40 # 暂停时间单位秒
+        rest_time = 60 # 暂停时间单位秒
         console.print(
             _(
                 "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
