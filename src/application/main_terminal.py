@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Callable, Union
 from pydantic import ValidationError
 
 # from ..custom import failure_handling
-from ..custom import suspend
+from ..custom import suspend, wait_account
 from ..downloader import Downloader
 from ..extract import Extractor
 from ..interface import (
@@ -584,6 +584,7 @@ class TikTok:
                 )
             )
         if not tiktok:
+            await wait_account()
             await self.parameter.refresh_douyin_for_account()
         acquirer = self._get_account_data_tiktok if tiktok else self._get_account_data
         account_data, earliest, latest = await acquirer(

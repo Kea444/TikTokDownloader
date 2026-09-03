@@ -9,6 +9,12 @@ if TYPE_CHECKING:
     from src.tools import ColorfulConsole
 
 
+# 重试前的随机间隔（秒）
+RETRY_WAIT_RANGE = (1.5, 3.0)
+# 账号之间的随机间隔（秒）
+ACCOUNT_WAIT_RANGE = (1.5, 3.0)
+
+
 def get_wait_time(
     avg_delay: float | int = 6.0,
     sigma: float = 0.6,
@@ -31,7 +37,14 @@ async def small_wait() -> None:
     """
     失败重试前的短暂间隔，避免短时间内连续发送大量请求触发风控
     """
-    await sleep(uniform(0.3, 1.0))
+    await sleep(uniform(*RETRY_WAIT_RANGE))
+
+
+async def wait_account() -> None:
+    """
+    批量下载账号作品模式中，每个账号之间的随机间隔，降低触发风控的概率
+    """
+    await sleep(uniform(*ACCOUNT_WAIT_RANGE))
 
 
 def failure_handling() -> bool:

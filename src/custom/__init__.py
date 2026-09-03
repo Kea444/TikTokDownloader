@@ -5,6 +5,7 @@ from .function import (
     suspend,
     is_valid_token,
     small_wait,
+    wait_account,
 )
 from .internal import (
     DISCLAIMER_TEXT,
