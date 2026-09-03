@@ -43,6 +43,17 @@ class Account(API):
         self.cursor = cursor
         self.count = count
         self.text = _("账号喜欢作品") if self.favorite else _("账号发布作品")
+        self._parameter = params
+        self.on_retry = self._refresh_on_retry
+
+    async def _refresh_on_retry(self) -> None:
+        """重试前刷新抖音 msToken，并同步本实例的 Cookie 请求头。"""
+        refresh = getattr(self._parameter, "refresh_douyin_session", None)
+        if not refresh:
+            return
+        await refresh()
+        if "Cookie" in self._parameter.headers:
+            self.headers["Cookie"] = self._parameter.headers["Cookie"]
 
     async def run(
         self,

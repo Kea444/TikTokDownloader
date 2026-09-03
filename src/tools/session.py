@@ -8,6 +8,14 @@ from httpx import (
 )
 ##from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 
+try:
+    from curl_cffi import requests as cffi_requests
+
+    _CFFI = True
+except ImportError:
+    cffi_requests = None
+    _CFFI = False
+
 
 from ..custom import TIMEOUT, USERAGENT
 from ..tools import DownloaderError
@@ -18,7 +26,7 @@ if TYPE_CHECKING:
     from ..record import BaseLogger, LoggerManager
     from ..testers import Logger
 
-__all__ = ["request_params", "create_client"]
+__all__ = ["request_params", "create_client", "create_cffi_session"]
 
 
 def create_client(
@@ -49,6 +57,34 @@ def create_client(
         *args,
         **kwargs,
     )
+
+
+def create_cffi_session(
+    timeout=TIMEOUT,
+    proxy: str = None,
+    impersonate="chrome",
+    *args,
+    **kwargs,
+):
+    """创建带 Chrome 指纹的异步会话（curl_cffi），失败则返回 None 以便回退到 httpx。"""
+    if not _CFFI:
+        return None
+    options = {
+        "timeout": timeout,
+        "verify": False,
+        "impersonate": impersonate,
+    }
+    if proxy:
+        options["proxy"] = proxy
+    options.update(kwargs)
+    try:
+        return cffi_requests.AsyncSession(**options)
+    except Exception:
+        options.pop("impersonate", None)
+        try:
+            return cffi_requests.AsyncSession(**options)
+        except Exception:
+            return None
 
 
 async def request_params(

@@ -17,6 +17,8 @@ class Retry:
                 if result := await function(self, *args, **kwargs):
                     return result
                 self.log.warning(_("正在进行第 {index} 次重试").format(index=i + 1))
+                if refresh := getattr(self, "on_retry", None):
+                    await refresh()
                 await small_wait()
             if not (result := await function(self, *args, **kwargs)) and finished:
                 self.finished = True

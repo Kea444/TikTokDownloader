@@ -4,6 +4,8 @@ aiofiles==25.1.0
     # via douk-downloader (pyproject.toml)
 aiosqlite==0.22.1
     # via douk-downloader (pyproject.toml)
+curl_cffi>=0.7.0
+    # via douk-downloader (pyproject.toml)
 emoji==2.15.0
     # via douk-downloader (pyproject.toml)
 fastapi==0.138.1

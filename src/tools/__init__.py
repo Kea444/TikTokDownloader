@@ -19,6 +19,7 @@ from .rename_compatible import RenameCompatible
 from .retry import Retry
 from .session import (
     create_client,
+    create_cffi_session,
     request_params,
 )
 from .temporary import random_string, timestamp
@@ -45,6 +46,7 @@ __all__ = [
     "Retry",
     "request_params",
     "create_client",
+    "create_cffi_session",
     "random_string",
     "timestamp",
     "run_time",

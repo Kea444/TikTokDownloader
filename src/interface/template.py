@@ -2,7 +2,15 @@ from time import time
 from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
 from urllib.parse import quote, urlencode
 
-from httpx import AsyncClient, get, post
+from httpx import (
+    AsyncClient,
+    HTTPStatusError,
+    Request,
+    RequestError,
+    Response,
+    get,
+    post,
+)
 from rich.progress import (
     BarColumn,
     Progress,
@@ -10,8 +18,8 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from ..custom import PROGRESS, wait
-from ..tools import DownloaderError, FakeProgress, Retry, capture_error_request
+from ..custom import PROGRESS, small_wait, wait
+from ..tools import DownloaderError, FakeProgress, capture_error_request
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -81,6 +89,7 @@ class API:
         self.timeout = params.timeout
         self.cookie = cookie
         self.client: AsyncClient = params.client
+        self.client_cffi = getattr(params, "client_cffi", None)
         self.pages = 99999
         self.cursor = 0
         self.response = []
@@ -255,6 +264,43 @@ class API:
         finished=False,
         **kwargs,
     ):
+        for i in range(self.max_retry):
+            if result := await self.__request_data_once(
+                url,
+                params,
+                data,
+                method,
+                headers,
+                **kwargs,
+            ):
+                return result
+            self.log.warning(_("正在进行第 {index} 次重试").format(index=i + 1))
+            if refresh := getattr(self, "on_retry", None):
+                await refresh()
+            await small_wait()
+        result = await self.__request_data_once(
+            url,
+            params,
+            data,
+            method,
+            headers,
+            **kwargs,
+        )
+        if not result and finished:
+            self.finished = True
+        return result
+
+    async def __request_data_once(
+        self,
+        url: str,
+        params: dict = None,
+        data: dict = None,
+        method="GET",
+        headers: dict = None,
+        **kwargs,
+    ):
+        if isinstance(params, dict) and "msToken" in params:
+            params["msToken"] = self.params["msToken"]
         params = self.deal_url_params(
             params,
             data,
@@ -266,7 +312,6 @@ class API:
                     url,
                     params,
                     headers or self.headers,
-                    finished=finished,
                     **kwargs,
                 )
             case ("GET", True):
@@ -274,7 +319,6 @@ class API:
                     url,
                     params,
                     headers or self.headers,
-                    finished=finished,
                     **kwargs,
                 )
             case ("POST", False):
@@ -283,7 +327,6 @@ class API:
                     params,
                     data,
                     headers or self.headers,
-                    finished=finished,
                     **kwargs,
                 )
             case ("POST", True):
@@ -292,13 +335,11 @@ class API:
                     params,
                     data,
                     headers or self.headers,
-                    finished=finished,
                     **kwargs,
                 )
             case _:
                 raise DownloaderError
 
-    @Retry.retry
     @capture_error_request
     async def request_data_get(
         self,
@@ -315,14 +356,21 @@ class API:
             headers,
             **kwargs,
         )
-        response = await self.client.get(
-            f"{url}?{params}",
-            headers=headers,
-            **kwargs,
-        )
+        if self.client_cffi is not None:
+            response = await self.__request_cffi(
+                "GET",
+                f"{url}?{params}",
+                None,
+                headers,
+            )
+        else:
+            response = await self.client.get(
+                f"{url}?{params}",
+                headers=headers,
+                **kwargs,
+            )
         return await self.__return_response(response)
 
-    @Retry.retry
     @capture_error_request
     async def request_data_get_proxy(
         self,
@@ -350,7 +398,6 @@ class API:
         )
         return await self.__return_response(response)
 
-    @Retry.retry
     @capture_error_request
     async def request_data_post(
         self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
@@ -362,15 +409,22 @@ class API:
             headers,
             **kwargs,
         )
-        response = await self.client.post(
-            f"{url}?{params}",
-            data=data,
-            headers=headers,
-            **kwargs,
-        )
+        if self.client_cffi is not None:
+            response = await self.__request_cffi(
+                "POST",
+                f"{url}?{params}",
+                data,
+                headers,
+            )
+        else:
+            response = await self.client.post(
+                f"{url}?{params}",
+                data=data,
+                headers=headers,
+                **kwargs,
+            )
         return await self.__return_response(response)
 
-    @Retry.retry
     @capture_error_request
     async def request_data_post_proxy(
         self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
@@ -406,6 +460,30 @@ class API:
         #     self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
         #     return
         return response.json()
+
+    async def __request_cffi(
+        self,
+        method: str,
+        url: str,
+        data: dict = None,
+        headers: dict = None,
+    ):
+        try:
+            if method == "POST":
+                response = await self.client_cffi.post(url, data=data, headers=headers)
+            else:
+                response = await self.client_cffi.get(url, headers=headers)
+        except Exception as exc:
+            raise RequestError(str(exc)) from exc
+        if 400 <= response.status_code < 600:
+            request = Request(method, url, headers=headers)
+            http_response = Response(response.status_code, request=request)
+            raise HTTPStatusError(
+                f"Client error '{response.status_code}' for url '{url}'",
+                request=request,
+                response=http_response,
+            )
+        return response
 
     def __record_request_messages(
         self,
@@ -548,6 +626,7 @@ class APITikTok(API):
         self.headers = params.headers_tiktok.copy()
         self.cookie = cookie
         self.client: AsyncClient = params.client_tiktok
+        self.client_cffi = None
         self.set_temp_cookie(cookie)
 
     async def request_data(

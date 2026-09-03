@@ -39,6 +39,7 @@ from ..tools import (
     DownloaderError,
     cookie_dict_to_str,
     create_client,
+    create_cffi_session,
     load_objects_from_external_py,
 )
 from ..translation import _
@@ -213,6 +214,10 @@ class Parameter:
         self.client_tiktok = create_client(
             timeout=self.timeout,
             proxy=self.proxy_tiktok,
+        )
+        self.client_cffi = create_cffi_session(
+            timeout=self.timeout,
+            proxy=self.proxy,
         )
 
         self.__generate_folders()
@@ -1016,6 +1021,10 @@ class Parameter:
             timeout=self.timeout,
             proxy=self.proxy_tiktok,
         )
+        self.client_cffi = create_cffi_session(
+            timeout=self.timeout,
+            proxy=self.proxy,
+        )
 
     @staticmethod
     def merge_browser_info(
@@ -1043,6 +1052,8 @@ class Parameter:
     async def close_client(self) -> None:
         await self.client.aclose()
         await self.client_tiktok.aclose()
+        if self.client_cffi:
+            await self.client_cffi.close()
 
     def __generate_folders(self):
         self.compatible()
