@@ -12,15 +12,15 @@ if TYPE_CHECKING:
 # 重试前的随机间隔（秒）
 RETRY_WAIT_RANGE = (1, 5)
 # 账号之间的随机间隔（秒）
-ACCOUNT_WAIT_RANGE = (1.5, 3.0)
+ACCOUNT_WAIT_RANGE = (0.5, 1.5)
 
 
 def get_wait_time(
-    avg_delay: float | int = 2.0,
+    avg_delay: float | int = 1.0,
     sigma: float = 0.5,
 ) -> float:
     mu = log(avg_delay) - (sigma**2 / 2)
-    return min(8.0, max(1.0, lognormvariate(mu, sigma)))
+    return min(4.0, max(0.5, lognormvariate(mu, sigma)))
 
 
 async def wait(
@@ -82,9 +82,9 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
     """
     # 启用该函数
-    batches = 20  # 下载第多少账号
+    batches = 30  # 下载第多少账号
     if not count % batches:
-        rest_time = 30 # 暂停时间单位秒
+        rest_time = 20 # 暂停时间单位秒
         console.print(
             _(
                 "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
