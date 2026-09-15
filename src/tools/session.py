@@ -43,8 +43,6 @@ def create_cffi_session(
     **kwargs,
 ):
     """创建带 Chrome 指纹的异步会话（curl_cffi），失败则返回 None 以便回退到 httpx。"""
-    if not _CFFI:
-        return None
     options = {
         "timeout": timeout,
         "verify": False,
