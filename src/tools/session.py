@@ -1,23 +1,9 @@
 from typing import TYPE_CHECKING, Union
-from httpx import (
-    AsyncClient,
-    AsyncHTTPTransport,
-    Client,
-    HTTPTransport,
-    Limits,
-)
-##from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 
-try:
-    from curl_cffi import requests as cffi_requests
+from curl_cffi import requests as cffi_requests
+from curl_cffi.requests import AsyncSession, Session
 
-    _CFFI = True
-except ImportError:
-    cffi_requests = None
-    _CFFI = False
-
-
-from ..custom import TIMEOUT, USERAGENT
+from ..custom import IMPERSONATE, TIMEOUT, USERAGENT
 from ..tools import DownloaderError
 from .capture import capture_error_params
 from .retry import Retry
@@ -30,30 +16,20 @@ __all__ = ["request_params", "create_client", "create_cffi_session"]
 
 
 def create_client(
-    user_agent=USERAGENT,
     timeout=TIMEOUT,
-    headers: dict = None,
-    proxy: str = None,
+    headers: dict | None = None,
+    proxy: str | None = None,
+    impersonate=IMPERSONATE,
     *args,
     **kwargs,
-) -> AsyncClient:
-    return AsyncClient(
-        headers=headers
-        or {
-            "User-Agent": user_agent,
-        },
+) -> AsyncSession:
+    return AsyncSession(
+        headers=headers,
         timeout=timeout,
-        follow_redirects=True,
+        allow_redirects=True,
         verify=False,
-        http2=True,
-        limits=Limits(
-    max_connections=100,
-    max_keepalive_connections=50,
-),
-        mounts={
-            "http://": AsyncHTTPTransport(proxy=proxy),
-            "https://": AsyncHTTPTransport(proxy=proxy),
-        },
+        proxy=proxy,
+        impersonate=impersonate,
         *args,
         **kwargs,
     )
@@ -95,29 +71,27 @@ async def request_params(
     ],
     url: str,
     method: str = "POST",
-    params: dict | str = None,
-    data: dict | str = None,
+    params: dict | str = "",
+    data: dict | str = "",
     useragent=USERAGENT,
     timeout=TIMEOUT,
-    headers: dict = None,
+    headers: dict | None = None,
     resp="headers",
-    proxy: str = None,
+    proxy: str | None = None,
+    impersonate=IMPERSONATE,
     **kwargs,
 ):
-    with Client(
+    with Session(
         headers=headers
         or {
-            "User-Agent": useragent,
             "Content-Type": "application/json; charset=utf-8",
             # "Referer": "https://www.douyin.com/"
         },
-        follow_redirects=True,
+        allow_redirects=True,
         timeout=timeout,
         verify=False,
-        mounts={
-            "http://": HTTPTransport(proxy=proxy),
-            "https://": HTTPTransport(proxy=proxy),
-        },
+        proxy=proxy,
+        impersonate=impersonate,
     ) as client:
         return await request(
             logger,
@@ -139,7 +113,7 @@ async def request(
         "LoggerManager",
         "Logger",
     ],
-    client: Client,
+    client: Session,
     method: str,
     url: str,
     resp="json",

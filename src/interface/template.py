@@ -1,16 +1,7 @@
 from time import time
 from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
-from urllib.parse import quote, urlencode
 
-from httpx import (
-    AsyncClient,
-    HTTPStatusError,
-    Request,
-    RequestError,
-    Response,
-    get,
-    post,
-)
+from curl_cffi.requests import AsyncSession, get, post
 from rich.progress import (
     BarColumn,
     Progress,
@@ -18,12 +9,19 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from ..custom import PROGRESS, small_wait, wait
-from ..tools import DownloaderError, FakeProgress, capture_error_request
+from ..custom import PROGRESS, wait
+from ..tools import (
+    DownloaderError,
+    FakeProgress,
+    Retry,
+    capture_error_request,
+    cookie_str_to_dict,
+)
 from ..translation import _
 
 if TYPE_CHECKING:
     from ..config import Parameter
+    from ..encrypt import DouYinParams, TikTokParams
     from ..testers import Params
 
 __all__ = [
@@ -42,7 +40,7 @@ class API:
         "channel": "channel_pc_web",
         "update_version_code": "170400",
         "pc_client_type": "1",
-        "pc_libra_divert": "Windows",
+        "pc_libra_divert": "Mac",
         "support_h265": "1",
         "support_dash": "1",
         "version_code": "290100",
@@ -51,14 +49,14 @@ class API:
         "screen_width": "1536",
         "screen_height": "864",
         "browser_language": "zh-CN",
-        "browser_platform": "Win32",
+        "browser_platform": "MacIntel",
         "browser_name": "Chrome",
-        "browser_version": "139.0.0.0",
+        "browser_version": "146.0.0.0",
         "browser_online": "true",
         "engine_name": "Blink",
-        "engine_version": "139.0.0.0",
-        "os_name": "Windows",
-        "os_version": "10",
+        "engine_version": "146.0.0.0",
+        "os_name": "Mac OS",
+        "os_version": "10.15.7",
         "cpu_core_num": "16",
         "device_memory": "8",
         "platform": "PC",
@@ -75,21 +73,22 @@ class API:
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):
         self.headers = params.headers.copy()
         self.log = params.logger
-        self.ab = params.ab
+        self.douyin_params: "DouYinParams" = params.douyin_params
         self.console = params.console
         self.api = ""
         self.proxy = proxy
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.cookie = cookie
-        self.client: AsyncClient = params.client
-        self.client_cffi = getattr(params, "client_cffi", None)
+        self.client: AsyncSession = params.client
+        self.impersonate = params.impersonate
+        self.user_agent = params.user_agent
         self.pages = 99999
         self.cursor = 0
         self.response = []
@@ -100,6 +99,16 @@ class API:
     def set_temp_cookie(self, cookie: str = ""):
         if cookie:
             self.headers["Cookie"] = cookie
+            uifid = next(
+                (
+                    value
+                    for key, value in cookie_str_to_dict(cookie).items()
+                    if key.lower() == "uifid"
+                ),
+                "",
+            )
+            if uifid:
+                self.headers["uifid"] = uifid
 
     def generate_params(
         self,
@@ -264,44 +273,8 @@ class API:
         finished=False,
         **kwargs,
     ):
-        for i in range(self.max_retry):
-            if result := await self.__request_data_once(
-                url,
-                params,
-                data,
-                method,
-                headers,
-                **kwargs,
-            ):
-                return result
-            self.log.warning(_("正在进行第 {index} 次重试").format(index=i + 1))
-            if refresh := getattr(self, "on_retry", None):
-                await refresh()
-            await small_wait()
-        result = await self.__request_data_once(
-            url,
-            params,
-            data,
-            method,
-            headers,
-            **kwargs,
-        )
-        if not result and finished:
-            self.finished = True
-        return result
-
-    async def __request_data_once(
-        self,
-        url: str,
-        params: dict = None,
-        data: dict = None,
-        method="GET",
-        headers: dict = None,
-        **kwargs,
-    ):
-        if isinstance(params, dict) and "msToken" in params:
-            params["msToken"] = self.params["msToken"]
         params = self.deal_url_params(
+            url,
             params,
             data,
             method,
@@ -312,6 +285,7 @@ class API:
                     url,
                     params,
                     headers or self.headers,
+                    finished=finished,
                     **kwargs,
                 )
             case ("GET", True):
@@ -319,6 +293,7 @@ class API:
                     url,
                     params,
                     headers or self.headers,
+                    finished=finished,
                     **kwargs,
                 )
             case ("POST", False):
@@ -327,6 +302,7 @@ class API:
                     params,
                     data,
                     headers or self.headers,
+                    finished=finished,
                     **kwargs,
                 )
             case ("POST", True):
@@ -335,11 +311,13 @@ class API:
                     params,
                     data,
                     headers or self.headers,
+                    finished=finished,
                     **kwargs,
                 )
             case _:
                 raise DownloaderError
 
+    @Retry.retry
     @capture_error_request
     async def request_data_get(
         self,
@@ -356,21 +334,14 @@ class API:
             headers,
             **kwargs,
         )
-        if self.client_cffi is not None:
-            response = await self.__request_cffi(
-                "GET",
-                f"{url}?{params}",
-                None,
-                headers,
-            )
-        else:
-            response = await self.client.get(
-                f"{url}?{params}",
-                headers=headers,
-                **kwargs,
-            )
+        response = await self.client.get(
+            f"{url}?{params}",
+            headers=headers,
+            **kwargs,
+        )
         return await self.__return_response(response)
 
+    @Retry.retry
     @capture_error_request
     async def request_data_get_proxy(
         self,
@@ -391,13 +362,15 @@ class API:
             f"{url}?{params}",
             headers=headers,
             proxy=self.proxy,
-            follow_redirects=True,
+            impersonate=self.impersonate,
+            allow_redirects=True,
             verify=False,
             timeout=self.timeout,
             **kwargs,
         )
         return await self.__return_response(response)
 
+    @Retry.retry
     @capture_error_request
     async def request_data_post(
         self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
@@ -409,22 +382,15 @@ class API:
             headers,
             **kwargs,
         )
-        if self.client_cffi is not None:
-            response = await self.__request_cffi(
-                "POST",
-                f"{url}?{params}",
-                data,
-                headers,
-            )
-        else:
-            response = await self.client.post(
-                f"{url}?{params}",
-                data=data,
-                headers=headers,
-                **kwargs,
-            )
+        response = await self.client.post(
+            f"{url}?{params}",
+            data=data,
+            headers=headers,
+            **kwargs,
+        )
         return await self.__return_response(response)
 
+    @Retry.retry
     @capture_error_request
     async def request_data_post_proxy(
         self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
@@ -441,7 +407,8 @@ class API:
             data=data,
             headers=headers,
             proxy=self.proxy,
-            follow_redirects=True,
+            impersonate=self.impersonate,
+            allow_redirects=True,
             verify=False,
             timeout=self.timeout,
             **kwargs,
@@ -461,30 +428,6 @@ class API:
         #     return
         return response.json()
 
-    async def __request_cffi(
-        self,
-        method: str,
-        url: str,
-        data: dict = None,
-        headers: dict = None,
-    ):
-        try:
-            if method == "POST":
-                response = await self.client_cffi.post(url, data=data, headers=headers)
-            else:
-                response = await self.client_cffi.get(url, headers=headers)
-        except Exception as exc:
-            raise RequestError(str(exc)) from exc
-        if 400 <= response.status_code < 600:
-            request = Request(method, url, headers=headers)
-            http_response = Response(response.status_code, request=request)
-            raise HTTPStatusError(
-                f"Client error '{response.status_code}' for url '{url}'",
-                request=request,
-                response=http_response,
-            )
-        return response
-
     def __record_request_messages(
         self,
         url: str,
@@ -503,19 +446,16 @@ class API:
 
     def deal_url_params(
         self,
+        url: str,
         params: dict,
         data: dict | None = None,
         method="GET",
         **kwargs,
     ) -> str:
         if params:
-            params = urlencode(
-                params,
-                safe="=",
-                quote_via=quote,
+            return self.douyin_params.sign_url(
+                url, params, data, method, user_agent=self.user_agent
             )
-            params += f"&a_bogus={self.ab.get_value(params, data, method, user_agent=self.headers['User-Agent'])}"
-            return params
         return ""
 
     def summary_works(
@@ -586,8 +526,8 @@ class APITikTok(API):
         "browser_language": "zh-SG",
         "browser_name": "Mozilla",
         "browser_online": "true",
-        "browser_platform": "Win32",
-        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "browser_platform": "MacIntel",
+        "browser_version": "5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
         "channel": "tiktok_web",
         "cookie_enabled": "true",
         "data_collection_enabled": "true",
@@ -600,7 +540,7 @@ class APITikTok(API):
         "is_fullscreen": "false",
         "is_page_visible": "true",
         "language": "en",
-        "os": "windows",
+        "os": "mac",
         "priority_region": "US",
         "referer": "",
         "region": "US",
@@ -616,17 +556,17 @@ class APITikTok(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
-        self.xb = params.xb
-        self.xg = params.xg
+        self.tiktok_params: "TikTokParams" = params.tiktok_params
         self.headers = params.headers_tiktok.copy()
         self.cookie = cookie
-        self.client: AsyncClient = params.client_tiktok
-        self.client_cffi = None
+        self.client: AsyncSession = params.client_tiktok
+        self.impersonate = params.impersonate_tiktok
+        self.user_agent_tiktok = params.user_agent_tiktok
         self.set_temp_cookie(cookie)
 
     async def request_data(
@@ -651,29 +591,19 @@ class APITikTok(API):
 
     def deal_url_params(
         self,
+        url: str,
         params: dict,
         data: dict | None = None,
         method="GET",
         **kwargs,
     ) -> str:
         if params:
-            params = urlencode(
-                params,
-                safe="=",
-                quote_via=quote,
-            )
-            xb = self.xb.get_x_bogus(
+            return self.tiktok_params.sign_url(
+                url,
                 params,
                 data,
                 method,
-                user_agent=self.headers["User-Agent"],
+                user_agent=self.user_agent_tiktok,
+                ms_token=self.params["msToken"],
             )
-            xg = self.xg.generate(
-                params,
-                data,
-                method,
-                user_agent=self.headers["User-Agent"],
-            )
-            params += f"&X-Bogus={xb}&X-Gnarly={xg}"
-            return params
         return ""

@@ -9,28 +9,28 @@
 <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=flat-square&color=fda7df">
 <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=flat-square&color=a29bfe">
 <br>
-<img alt="Static Badge" src="https://img.shields.io/badge/Python-3.12-b8e994?style=flat-square&logo=python&labelColor=3dc1d3">
+<img alt="Static Badge" src="https://img.shields.io/badge/Python-≥3.12-b8e994?style=flat-square&logo=python&labelColor=3dc1d3">
 <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=flat-square&color=48dbfb">
 <img src="https://img.shields.io/badge/Sourcery-enabled-884898?style=flat-square&color=1890ff" alt="">
 <img alt="Static Badge" src="https://img.shields.io/badge/Docker-badc58?style=flat-square&logo=docker">
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=flat-square&color=ffdd59">
-</div>
 <br>
-<p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream push addresses; download DouYin live stream video; obtain TikTok live stream push addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
+<p>🔥 DouYin / TikTok content download and data collection tool</p>
 <p>⭐ Previous project names: <code>TikTokDownloader</code></p>
-<p>⚠️ The encryption parameter algorithm for this project has expired and is no longer valid; to ensure legal and regulatory compliance, the parameter algorithm is no longer maintained, and some features may not work properly. If you need to use it, please prepare the encryption parameter generation code yourself. For configuration instructions, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">documentation</a>!</p>
-<p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
+</div>
+<hr>
+<p>⚠️ The project is planned to be fully refactored in version <code>6.0</code>. Support for a <code>GUI</code> or <code>WebUI</code> is expected after the refactoring is completed.</p>
+<p>⚠️ To ensure compliance with applicable laws and regulations, this project no longer maintains algorithms for generating encryption parameters. If platform updates cause some features to stop functioning properly, please implement your own encryption parameter generation code. For configuration instructions, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">documentation</a>.</p>
 <hr>
 
 # 📝 Project Features
 
 <details>
-<summary>Function List (Click to Expand)</summary>
+<summary>Project feature list, for users who want to quickly understand project capabilities (Click to Expand)</summary>
 <ul>
 <li>✅ Download DouYin video/image</li>
 <li>✅ Download DouYin live photo</li>
 <li>✅ Download the highest quality video file</li>
-<li>✅ Download TikTok video source files</li>
 <li>✅ Download TikTok video/image</li>
 <li>✅ Download of DouYin account posts/liked/favorites works</li>
 <li>✅ Download of TikTok account posts/liked works</li>
@@ -62,7 +62,6 @@
 <li>✅ Collect DouYin search data</li>
 <li>✅ Collect DouYin hot board data</li>
 <li>✅ Record IDs of already downloaded works</li>
-<li>☑️ <del>Scan QR code to log in and obtain Cookies</del></li>
 <li>✅ Obtain Cookies from browsers</li>
 <li>✅ Support Web API calls</li>
 <li>✅ Support multithreaded downloading of works</li>
@@ -91,8 +90,7 @@
 
 ## Web UI interaction mode
 
-> **The project code has been refactored; the code for this mode has not yet been updated. It will be reopened after
-future development is completed!**
+> **The code for this mode has not yet been updated. It will be reopened after the refactoring is completed!**
 
 ## Web API mode
 
@@ -106,7 +104,7 @@ generated documentation!**
 ### API call example code
 
 ```python
-from httpx import post
+from curl_cffi.requests import post
 from rich import print
 
 
@@ -132,6 +130,7 @@ demo()
 <p>⭐ This project includes GitHub Actions for automatic building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
 <p>⭐ For the automatic building executable files tutorial, please refer to the <code>Build of Executable File Guide</code> section of this document. If you need a more detailed step-by-step tutorial with illustrations, please <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">check out this article</a>!</p>
 <p><strong>Note: Due to the macOS platform's executable file <code>main</code> not being code-signed, it will be restricted by system security measures on first run. Please execute the command <code>xattr -cr project_folder_path</code> in the terminal to remove the security flag, after which it can run normally.</strong></p>
+<p><strong><a href="https://nodejs.org/">Node.js</a> (Optional Dependency)</strong>: <del>Some features depend on Node.js to execute JavaScript code and require Node.js version 18 or above. It is recommended that users install Node.js on their own; without it, some features may be affected.</del></p>
 <hr>
 <ol>
 <li><b>Run the executable file</b> or <b>configure the environment to run</b> (choose one of the two)
@@ -167,11 +166,6 @@ demo()
 <ol><b><del>Read Cookie from Browser (Deprecated)</del></b>
 <li><del>Select the <code>Extracting cookie from browser</code> option, then follow the prompts to input the browser type or its corresponding number</del></li>
 </ol>
-<ol><b><del>Obtain Cookie via QR Code Login</del> (No longer valid)</b>
-<li><del>Select the <code>Scan code to login and get cookies (DouYin)</code> option, the program will display a login QR code image and open it with the default application</del></li>
-<li><del>Use the DouYin app to scan the QR code and log in</del></li>
-<li><del>Follow the prompts, the program will automatically write the Cookie into the configuration file</del></li>
-</ol>
 </li>
 <li>Return to the program interface, sequentially select <code>Terminal Mode</code> -> <code>Batch Download Works from Links</code> -> <code>Manually enter the works links to be collected</code>.</li>
 <li>Input the DouYin works link to download the works file (the TikTok platform requires more initial setup, please refer to the documentation for details).</li>
@@ -180,6 +174,9 @@ demo()
 <p>⭐ It is recommended to use <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows Terminal</a> (the default terminal that comes with Windows 11).</p>
 
 ### Docker Container
+
+<details>
+<summary>Docker container deployment steps, for users who deploy and run this project with Docker (Click to Expand)</summary>
 
 <ol>
 <li>Get the image</li>
@@ -198,6 +195,8 @@ demo()
 </li>
 </ol>
 <p>Docker containers cannot directly access the host machine's file system, and some features may be unavailable, for example: <code>Get Cookie from Browser</code>; if there are any other issues, please report!</p>
+
+</details>
 <hr>
 
 ## About Cookie
@@ -207,9 +206,6 @@ demo()
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.
 >
-> * The Cookie can affect the resolution of the video files downloaded from the DouYin platform. If you are unable to
-    download high-resolution video files, please try updating the Cookie!
->
 > * When the program fails to obtain data, you can try updating the Cookie or using a Cookie that is already logged in!
 
 <hr>
@@ -217,7 +213,7 @@ demo()
 ## Other Instructions
 
 <ul>
-<li>This project has a built-in intelligent delay request mechanism to avoid affecting platform servers due to excessive request frequency. If you need to disable it, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">documentation</a></li>
+<li>This project has a built-in delay request mechanism to avoid affecting platform servers due to excessive request frequency. If you need to disable it, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">documentation</a></li>
 <li>When the program prompts the user for input, pressing Enter directly will return to the previous menu, and inputting <code>Q</code> or <code>q</code> will end the program's execution.</li>
 <li>Since fetching data for liked and favorites works of an account only returns the publication dates of those works, not the dates of the actions (liking or favouring), the program needs to retrieve all liked and favorites works data before performing date filtering. If there are a large number of works, this may take a considerable amount of time. The number of requests can be controlled via the <code>max_pages</code> parameter.</li>
 <li>To obtain data for posts made by a private account, a logged-in Cookie is required, and the logged-in account must follow the private account.</li>
@@ -234,7 +230,7 @@ demo()
 </ul>
 <h2>Build of Executable File Guide</h2>
 <details>
-<summary>Build of Executable File Guide (Click to Expand)</summary>
+<summary>Automated with GitHub Actions in a few simple steps, for users who need to build the program themselves (Click to Expand)</summary>
 
 This guide will walk you through forking this repository and executing GitHub Actions to automatically build and package
 the program based on the latest source code!
@@ -288,8 +284,7 @@ the program based on the latest source code!
 ### Notes
 
 1. **Resource Usage**:
-    - GitHub provides free build environments for Actions, with a monthly usage limit (2000 minutes) for free-tier
-      users
+    - GitHub provides free build environments for Actions, with a monthly usage limit (2000 minutes) for free-tier users
 
 2. **Code Modifications**:
     - You are free to modify the code in your forked repository to customize the build process
@@ -326,7 +321,7 @@ repository to execute the build process
 
 ## Program Update
 
-<p><strong>Method 1:</strong> Download and extract the files, then copy the old version of the <code>_internal\Volume</code> folder into the new version's <code>_internal</code> folder.</p>
+<p><strong>Method 1:</strong> Download and extract the files, then copy the old version's <code>Volume</code> folder into the new version's program root directory.</p>
 <p><strong>Method 2:</strong> Download and extract the files (do not run the program), then copy all files and directly overwrite the old version.</p>
 
 # 💝 Project Sponsorship
@@ -339,23 +334,9 @@ repository to execute the build process
 
 ***
 
-## Thordata
-
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_EN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>: offers 100M+ rotating residential IPs across 190+ countries, Unlimited proxies are ideal for high-concurrency, high-traffic tasks, from $38/day, rotating or sticky sessions, precise targeting and more stable connections. Use code <b>Thor20d</b> for a 10% discount.</p>
-
-***
-
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
-
-***
-
-## ZMTO
-
-<p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
-<p><a href="https://www.zmto.com/">ZMTO</a>: A professional cloud infrastructure provider offering sophisticated solutions with reliable technology and expert support. We also empower qualified open source initiatives with enterprise-grade VPS infrastructure, driving sustainable development and innovation in the open source ecosystem. </p>
 
 ***
 
@@ -365,6 +346,9 @@ repository to execute the build process
 <p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader">TikHub API</a> offers over 700 endpoints to retrieve and analyze data from 14+ social media platforms—including videos, users, comments, stores, products, trends, and more—enabling one-stop access and analysis of all your data.</p>
 <p>Use <strong>invitation code</strong>: <code>ZrdH8McC</code> to register and recharge to get <code>$2</code> credit.</p>
 <h1>🌟 Contribution Guidelines</h1>
+<details>
+<summary>Contribution guidelines and submission process, for developers who intend to contribute to this project (Click to Expand)</summary>
+
 <p><strong>Welcome to contributing to this project! To keep the codebase clean, efficient, and easy to maintain, please read the following guidelines carefully to ensure that your contributions can be accepted and integrated smoothly.</strong></p>
 <ul>
 <li>Before starting development, please pull the latest code from the <code>develop</code> branch as the basis for your modifications; this helps avoid merge conflicts and ensures your changes are based on the latest state of the project.</li>
@@ -381,6 +365,8 @@ repository to execute the build process
 <li><a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">Contributor Covenant</a></li>
 <li><a href="https://opensource.guide/how-to-contribute/">How to Contribute to Open Source</a></li>
 </ul>
+
+</details>
 
 # ♥️ Support the Project
 
@@ -434,22 +420,21 @@ repository to execute the build process
 <b>Before using the code and functionalities of this project, please carefully consider and accept the above disclaimer. If you have any questions or disagree with the statement, please do not use the code and functionalities of this project. If you use the code and functionalities of this project, it is considered that you fully understand and accept the above disclaimer, and willingly assume all risks and consequences associated with the use of this project.</b>
 <h1>⭐ Star History</h1>
 <p>
-<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
+<img alt="Star History Chart" src="https://api.star-history.com/chart?repos=JoeanAmier/TikTokDownloader&type=timeline&legend=bottom-right&sealed_token=_T_oN4xPDhh9ew5nz-OYOAjczkaYr6UUekQ5dTCrnmtR9kk5mM6h5fdHGJRy4ZaLEb36r8gSCrMfot4pk2E5lYzH-Ixk6eFOmmk1sNViVxsf-lkDYaQsbR9awBGeFyASWSX_RV10hHOWQEivZXRp4n9hcpf02mpReiwPVJHdQPXJryOXo1jDXlTF2UoX" />
 </p>
 
-# 💡 Project References
+# 💡 Acknowledgements
 
-* https://github.com/Johnserf-Seed/f2
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
-* https://github.com/justbeluga/tiktok-web-reverse-engineering
+* https://github.com/Johnserf-Seed/f2
 * https://github.com/ihmily/DouyinLiveRecorder
-* https://github.com/encode/httpx/
+* https://github.com/lexiforest/curl_cffi/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
 * https://github.com/Tinche/aiofiles
-* https://github.com/pyinstaller/pyinstaller
+* https://github.com/marcelotduarte/cx_Freeze
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
-* https://github.com/neverl805/never-jscore
+* https://github.com/extremeheat/JSPyBridge
 * https://ffmpeg.org/ffmpeg-all.html

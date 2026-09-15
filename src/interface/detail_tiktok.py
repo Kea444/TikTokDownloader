@@ -13,7 +13,7 @@ class DetailTikTok(APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)
@@ -83,7 +83,7 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        DetailTikTok.params["msToken"] = params.msToken_tiktok
+        DetailTikTok.params["msToken"] = params.ms_token_tiktok
         i = DetailTikTok(
             params,
             detail_id="",

@@ -14,7 +14,7 @@ class CommentTikTok(Comment, APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = ...,
         pages: int = None,
         cursor=0,
@@ -46,7 +46,7 @@ class ReplyTikTok(Reply, CommentTikTok, APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = "",
         comment_id: str = "",
         pages: int = None,
@@ -86,8 +86,8 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        CommentTikTok.params["msToken"] = params.msToken_tiktok
-        ReplyTikTok.params["msToken"] = params.msToken_tiktok
+        CommentTikTok.params["msToken"] = params.ms_token_tiktok
+        ReplyTikTok.params["msToken"] = params.ms_token_tiktok
         i = CommentTikTok(
             params,
             detail_id="",
